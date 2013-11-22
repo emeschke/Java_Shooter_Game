@@ -63,7 +63,7 @@ import edu.uchicago.cs.java.finalproject.game.model.Movable;
 	// ==============================================================
 	
 	private void drawScore(Graphics g) {
-		g.setColor(Color.white);
+        g.setColor(Color.white);
 		g.setFont(fnt);
 		if (CommandCenter.getScore() != 0) {
 			g.drawString("SCORE :  " + CommandCenter.getScore(), nFontWidth, nFontHeight);
@@ -85,8 +85,8 @@ import edu.uchicago.cs.java.finalproject.game.model.Movable;
 		grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
 
 		drawScore(grpOff);
-		
-		if (!CommandCenter.isPlaying()) {
+
+        if (!CommandCenter.isPlaying()) {
 			displayTextOnScreen();
 		} else if (CommandCenter.isPaused()) {
 			strDisplay = "Game Paused";

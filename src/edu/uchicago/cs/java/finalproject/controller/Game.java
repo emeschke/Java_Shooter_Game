@@ -77,7 +77,7 @@ public class Game implements Runnable, KeyListener {
 	// ===============================================
 
 	public static void main(String args[]) {
-		EventQueue.invokeLater(new Runnable() { // uses the Event dispatch thread from Java 5 (refactored)
+        EventQueue.invokeLater(new Runnable() { // uses the Event dispatch thread from Java 5 (refactored)
 					public void run() {
 						try {
 							Game game = new Game(); // construct itself
@@ -111,7 +111,7 @@ public class Game implements Runnable, KeyListener {
 		while (Thread.currentThread() == thrAnim) {
 			tick();
 			spawnNewShipFloater();
-			gmpPanel.update(gmpPanel.getGraphics()); // update takes the graphics context we must 
+            gmpPanel.update(gmpPanel.getGraphics()); // update takes the graphics context we must
 														// surround the sleep() in a try/catch block
 														// this simply controls delay time between 
 														// the frames of the animation
@@ -160,6 +160,7 @@ public class Game implements Runnable, KeyListener {
 		Point pntFriendCenter, pntFoeCenter;
 		int nFriendRadiux, nFoeRadiux;
 
+        //Iterate through the arrays to check if there are explosions in either.
 		for (Movable movFriend : CommandCenter.movFriends) {
 			for (Movable movFoe : CommandCenter.movFoes) {
 
@@ -168,22 +169,23 @@ public class Game implements Runnable, KeyListener {
 				nFriendRadiux = movFriend.getRadius();
 				nFoeRadiux = movFoe.getRadius();
 
-				//detect collision
+				//detect collision--compare the radius to the distances.  If it is less there is a collision
 				if (pntFriendCenter.distance(pntFoeCenter) < (nFriendRadiux + nFoeRadiux)) {
 
-					//falcon
+                    //falcon
 					if ((movFriend instanceof Falcon) ){
 						if (!CommandCenter.getFalcon().getProtected()){
 							tupMarkForRemovals.add(new Tuple(CommandCenter.movFriends, movFriend));
 							CommandCenter.spawnFalcon(false);
 							killFoe(movFoe);
+
 						}
 					}
 					//not the falcon
 					else {
 						tupMarkForRemovals.add(new Tuple(CommandCenter.movFriends, movFriend));
 						killFoe(movFoe);
-					}//end else 
+                    }//end else
 
 					//explode/remove foe
 					
@@ -204,10 +206,10 @@ public class Game implements Runnable, KeyListener {
 			for (Movable movFloater : CommandCenter.movFloaters) {
 				pntFloaterCenter = movFloater.getCenter();
 				nFloaterRadiux = movFloater.getRadius();
-	
 				//detect collision
 				if (pntFalCenter.distance(pntFloaterCenter) < (nFalRadiux + nFloaterRadiux)) {
-	
+
+
 					
 					tupMarkForRemovals.add(new Tuple(CommandCenter.movFloaters, movFloater));
 					Sound.playSound("pacman_eatghost.wav");
@@ -218,7 +220,7 @@ public class Game implements Runnable, KeyListener {
 		
 		//remove these objects from their appropriate ArrayLists
 		//this happens after the above iterations are done
-		for (Tuple tup : tupMarkForRemovals) 
+		for (Tuple tup : tupMarkForRemovals)
 			tup.removeMovable();
 		
 		//add these objects to their appropriate ArrayLists
@@ -232,30 +234,32 @@ public class Game implements Runnable, KeyListener {
 	}//end meth
 
 	private void killFoe(Movable movFoe) {
-		
+        //Everytime an asteroid is killed it adds to the score.
+        CommandCenter.setScore(CommandCenter.getScore()+10);
+        System.out.println("Exploded");
 		if (movFoe instanceof Asteroid){
 
-			//we know this is an Asteroid, so we can cast without threat of ClassCastException
+            //we know this is an Asteroid, so we can cast without threat of ClassCastException
 			Asteroid astExploded = (Asteroid)movFoe;
 			//big asteroid 
 			if(astExploded.getSize() == 0){
 				//spawn two medium Asteroids
 				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				
-			} 
+				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes, new Asteroid(astExploded)));
+            }
 			//medium size aseroid exploded
 			else if(astExploded.getSize() == 1){
 				//spawn three small Asteroids
 				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
 				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-			}
+				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes, new Asteroid(astExploded)));
+
+            }
 			//remove the original Foe	
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
-		
-			
-		} 
+
+
+        }
 		//not an asteroid
 		else {
 			//remove the original Foe
