@@ -35,7 +35,8 @@ import edu.uchicago.cs.java.finalproject.game.model.Movable;
 		gmf.pack();
 		gmf.setSize(dim);
 		gmf.setTitle("Game Base");
-		gmf.setResizable(false);
+		//Change resizeable to true to make it resizeable.
+        gmf.setResizable(false);
 		gmf.setVisible(true);
 		this.setFocusable(true);
 	}

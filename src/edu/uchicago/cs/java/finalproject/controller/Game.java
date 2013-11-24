@@ -24,7 +24,8 @@ public class Game implements Runnable, KeyListener {
 
     private String strDisplay = "";
 
-	public static final Dimension DIM = new Dimension(1100, 900); //the dimension of the game.
+    //Change the size of the panel's dimension--starts off 1100,900
+	public static final Dimension DIM = new Dimension(900, 700); //the dimension of the game.
 	private GamePanel gmpPanel;
 	public static Random R = new Random();
 	public final static int ANI_DELAY = 45; // milliseconds between screen
@@ -56,7 +57,8 @@ public class Game implements Runnable, KeyListener {
 	private Clip clpThrust;
 	private Clip clpMusicBackground;
 
-	private static final int SPAWN_NEW_SHIP_FLOATER = 1200;
+    //Original at 1200.
+	private static final int SPAWN_NEW_SHIP_FLOATER = 100;
 
 
 
@@ -125,7 +127,7 @@ public class Game implements Runnable, KeyListener {
 
 			//this might be a good place to check for collisions
 			checkCollisions();
-			//this might be a god place to check if the level is clear (no more foes)
+			//this might be a good place to check if the level is clear (no more foes)
 			//if the level is clear then spawn some big asteroids -- the number of asteroids 
 			//should increase with the level. 
 			checkNewLevel();
@@ -219,7 +221,7 @@ public class Game implements Runnable, KeyListener {
 				//detect collision
 				if (pntFalCenter.distance(pntFloaterCenter) < (nFalRadiux + nFloaterRadiux)) {
 	
-					
+				    CommandCenter.setNumFalcons(CommandCenter.getNumFalcons()+1);
 					tupMarkForRemovals.add(new Tuple(CommandCenter.movFloaters, movFloater));
 					Sound.playSound("pacman_eatghost.wav");
 	
@@ -254,8 +256,15 @@ public class Game implements Runnable, KeyListener {
     }
 
 	private void killFoe(Movable movFoe) {
-		
-		if (movFoe instanceof Asteroid){
+
+        if (movFoe instanceof Asteroid){
+            //If statement to check the whether to update the level every 100 points.  Make this a new method?
+            //This only works sometimes.
+            CommandCenter.setScore(CommandCenter.getScore()+10);
+            if (((CommandCenter.getScore()%100) == 0)){
+                System.out.println("Changing level.");
+                CommandCenter.setLevel(CommandCenter.getLevel() + 1 );
+            }
 
 			//we know this is an Asteroid, so we can cast without threat of ClassCastException
 			Asteroid astExploded = (Asteroid)movFoe;
@@ -374,6 +383,7 @@ public class Game implements Runnable, KeyListener {
         grpOff.fillRect(0, 0, Game.DIM.width, Game.DIM.height);
 
         drawScore(grpOff);
+        //drawNumberShipsLeft(grpOff);
 
         if (!CommandCenter.isPlaying()) {
             displayTextOnScreen();
@@ -516,7 +526,9 @@ public class Game implements Runnable, KeyListener {
         g.setColor(Color.white);
         g.setFont(offScreenImage.getFnt());
         if (CommandCenter.getScore() != 0) {
-            g.drawString("SCORE :  " + CommandCenter.getScore(), offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
+            //Also draw the level
+            g.drawString("SCORE :  " + CommandCenter.getScore() + "     LEVEL: " + CommandCenter.getLevel(),
+                         offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
         } else {
             g.drawString("NO SCORE", offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
         }
@@ -584,7 +596,7 @@ public class Game implements Runnable, KeyListener {
 	public void keyReleased(KeyEvent e) {
 		Falcon fal = CommandCenter.getFalcon();
 		int nKey = e.getKeyCode();
-		 System.out.println(nKey);
+		 //System.out.println(nKey);
 
 		if (fal != null) {
 			switch (nKey) {

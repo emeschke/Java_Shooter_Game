@@ -49,7 +49,8 @@ public class Falcon extends Sprite {
 		// top of ship
 		pntCs.add(new Point(0, 18)); 
 		
-		//right points
+		//right points  Original points
+        /*
 		pntCs.add(new Point(3, 3)); 
 		pntCs.add(new Point(12, 0)); 
 		pntCs.add(new Point(13, -2)); 
@@ -70,9 +71,19 @@ public class Falcon extends Sprite {
 		pntCs.add(new Point(-13, -2)); 
 		pntCs.add(new Point(-12, 0)); 
 		pntCs.add(new Point(-3, 3)); 
-		
+		*/
 
-		assignPolarPoints(pntCs);
+        pntCs.add(new Point(3, 3));
+        pntCs.add(new Point(12, 0));
+        pntCs.add(new Point(13, -2));
+        pntCs.add(new Point(13, -4));
+
+        pntCs.add(new Point(-13, -4));
+        pntCs.add(new Point(-13, -2));
+        pntCs.add(new Point(-12, 0));
+        pntCs.add(new Point(-3, 3));
+
+        assignPolarPoints(pntCs);
 
 		setColor(Color.white);
 		
