@@ -117,7 +117,7 @@ public class Game implements Runnable, KeyListener {
 		while (Thread.currentThread() == thrAnim) {
 			tick();
 			spawnNewShipFloater();
-
+            spawnNewDiamond();
             drawOffScreen();
 
 			gmpPanel.update(gmpPanel.getGraphics()); // update takes the graphics context we must 
@@ -323,6 +323,15 @@ public class Game implements Runnable, KeyListener {
 		}
 	}
 
+
+    private void spawnNewDiamond() {
+        //Spawn a diamond and add it to the moveFoes array.
+        //Need to change this constant.
+        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+            CommandCenter.movFoes.add(new Diamond());
+        }
+    }
+
 	// Called when user presses 's'
 	private void startGame() {
 		CommandCenter.clearAll();
@@ -338,7 +347,10 @@ public class Game implements Runnable, KeyListener {
 	private void spawnAsteroids(int nNum) {
 		for (int nC = 0; nC < nNum; nC++) {
 			//Asteroids with size of zero are big
-			CommandCenter.movFoes.add(new Asteroid(0));
+			//CommandCenter.movFoes.add(new Asteroid(0));
+			//Add square asteroids
+            CommandCenter.movFoes.add(new Asteroid(0));
+            //CommandCenter.movFoes.add(new SquareAsteroid(0));
 		}
 	}
 	

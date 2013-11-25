@@ -88,11 +88,16 @@ public class Falcon extends Sprite {
 		setColor(Color.white);
 		
 		//put falcon in the middle.
-		setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
-		
-		//with random orientation
-		setOrientation(Game.R.nextInt(360));
-		
+        //Set the falcon in the middle.
+        //setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
+        setCenter(new Point(Game.DIM.width / 2, 9*Game.DIM.height/10 ));
+
+
+        //with random orientation
+		//setOrientation(Game.R.nextInt(360));
+		//Change orientation to straight up toward top. (value of 270)
+        setOrientation(270);
+
 		//this is the size of the falcon
 		setRadius(35);
 
@@ -112,10 +117,12 @@ public class Falcon extends Sprite {
 			bFlame = true;
 			double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
 					* THRUST;
-			double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
-					* THRUST;
+			//double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
+			//		* THRUST;
 			setDeltaX(getDeltaX() + dAdjustX);
-			setDeltaY(getDeltaY() + dAdjustY);
+			//Only let the falcon move left and right.
+			//setDeltaY(getDeltaY() + dAdjustY);
+			setDeltaY(getDeltaY() );
 		}
 		if (bTurningLeft) {
 
@@ -133,11 +140,15 @@ public class Falcon extends Sprite {
 	} //end move
 
 	public void rotateLeft() {
-		bTurningLeft = true;
+		//Restrict from turning left.
+		//bTurningLeft = true;
+		bTurningLeft = false;
 	}
 
 	public void rotateRight() {
-		bTurningRight = true;
+		//Restrict from turning right.
+        //bTurningRight = true;
+        bTurningRight = false;
 	}
 
 	public void stopRotating() {

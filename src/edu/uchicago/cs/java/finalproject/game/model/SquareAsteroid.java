@@ -1,35 +1,35 @@
 package edu.uchicago.cs.java.finalproject.game.model;
 
 
+import edu.uchicago.cs.java.finalproject.controller.Game;
+
 import java.awt.*;
 import java.util.Arrays;
 
-import edu.uchicago.cs.java.finalproject.controller.Game;
+public class SquareAsteroid extends Sprite {
 
-public class Asteroid extends Sprite {
 
-	
 	private int nSpin;
-	
+
 	//radius of a large asteroid
-	private final int RAD = 100;
-	
+	private final int RAD = 10;
+
 	//nSize determines if the Asteroid is Large (0), Medium (1), or Small (2)
 	//when you explode a Large asteroid, you should spawn 2 or 3 medium asteroids
 	//same for medium asteroid, you should spawn small asteroids
 	//small asteroids get blasted into debris
-	public Asteroid(int nSize){
-		
+	public SquareAsteroid(int nSize){
+
 		//call Sprite constructor  Why do we need to call this constructor?
 		super();
-		
-		
+
+
 		//the spin will be either plus or minus 0-9
 		int nSpin = Game.R.nextInt(10);
 		if(nSpin %2 ==0)
 			nSpin = -nSpin;
 		setSpin(nSpin);
-			
+
 		//random delta-x
 		int nDX = Game.R.nextInt(10);
 		//Not sure what this does, setting it to a constant doesn't change things.
@@ -37,29 +37,29 @@ public class Asteroid extends Sprite {
         if(nDX %2 ==0)
 			nDX = -nDX;
 		setDeltaX(nDX);
-		
+
 		//random delta-y
 		int nDY = Game.R.nextInt(10);
         if(nDY %2 ==0)
 			nDY = -nDY;
 		setDeltaY(nDY);
-			
+
 		assignRandomShape();
-		
+
 		//an nSize of zero is a big asteroid
 		//a nSize of 1 or 2 is med or small asteroid respectively
 		if (nSize == 0)
 			setRadius(RAD);
 		else
 			setRadius(RAD/(nSize * 2));
-		
+
 
 	}
-	
 
-	
-	
-	public Asteroid(Asteroid astExploded){
+
+
+
+	public SquareAsteroid(SquareAsteroid astExploded){
 	
 
 		//call Sprite constructor
@@ -122,9 +122,7 @@ public class Asteroid extends Sprite {
 	public void move(){
 
         Point pnt = getCenter();
-        //double dX = pnt.x + getDeltaX();
-        //Make it so the asteroid doesn't move side to side.
-        double dX = pnt.x;
+        double dX = pnt.x + getDeltaX();
 
 
         //double dY = pnt.y + getDeltaY();
