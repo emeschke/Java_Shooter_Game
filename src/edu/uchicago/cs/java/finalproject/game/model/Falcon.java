@@ -25,7 +25,8 @@ public class Falcon extends Sprite {
 	private boolean bThrusting = false;
 	private boolean bTurningRight = false;
 	private boolean bTurningLeft = false;
-	
+	private int slideShip = 0;
+
 	private int nShield;
 			
 	private final double[] FLAME = { 23 * Math.PI / 24 + Math.PI / 2,
@@ -105,7 +106,7 @@ public class Falcon extends Sprite {
 		setProtected(true);
 		setFadeValue(0);
 	}
-	
+
 	
 	// ==============================================================
 	// METHODS 
@@ -113,23 +114,39 @@ public class Falcon extends Sprite {
 
 	public void move() {
 		super.move();
-		if (bThrusting) {
+		/*if (bThrusting) {
 			bFlame = true;
 			double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
 					* THRUST;
 			//double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
 			//		* THRUST;
-			setDeltaX(getDeltaX() + dAdjustX);
+			//setDeltaX(getDeltaX() + dAdjustX);
+			//Try to get it to move back and forth.  Works partly, but not well.
+            setDeltaX(getDeltaX() + 1);
 			//Only let the falcon move left and right.
 			//setDeltaY(getDeltaY() + dAdjustY);
 			setDeltaY(getDeltaY() );
 		}
+        */
+        if (slideShip != 0) {
+            bFlame = true;
+            double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
+                    * THRUST;
+            //double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
+            //		* THRUST;
+            //setDeltaX(getDeltaX() + dAdjustX);
+            //Try to get it to move back and forth.  Works partly, but not well.
+            setDeltaX(getDeltaX() + slideShip*.25);
+            //Only let the falcon move left and right.
+            //setDeltaY(getDeltaY() + dAdjustY);
+            setDeltaY(getDeltaY() );
+        }
 		if (bTurningLeft) {
 
-			if (getOrientation() <= 0 && bTurningLeft) {
-				setOrientation(360);
-			}
-			setOrientation(getOrientation() - DEGREE_STEP);
+			//if (getOrientation() <= 0 && bTurningLeft) {
+			//	setOrientation(360);
+			//}
+			//setOrientation(getOrientation() - DEGREE_STEP);
 		} 
 		if (bTurningRight) {
 			if (getOrientation() >= 360 && bTurningRight) {
@@ -144,6 +161,20 @@ public class Falcon extends Sprite {
 		//bTurningLeft = true;
 		bTurningLeft = false;
 	}
+
+    public void slideLeft(){
+        //for a left button key press, decrement the slide variable 1, or leave it at -1 if ship is already sliding left
+        if (slideShip != -1){
+            slideShip -= 1;
+        }
+    }
+
+    public void slideRight(){
+        //for a rt button key press, increment the slide variable 1, or leave it at 1 if ship is already sliding right
+        if (slideShip != 1){
+            slideShip += 1;
+        }
+    }
 
 	public void rotateRight() {
 		//Restrict from turning right.

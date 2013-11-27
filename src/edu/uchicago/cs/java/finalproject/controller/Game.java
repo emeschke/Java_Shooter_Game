@@ -43,13 +43,14 @@ public class Game implements Runnable, KeyListener {
 			QUIT = 81, // q key
 			LEFT = 37, // rotate left; left arrow
 			RIGHT = 39, // rotate right; right arrow
-			UP = 38, // thrust; up arrow
+
+            UP = 38, // thrust; up arrow
 			START = 83, // s key
 			FIRE = 32, // space key
 			MUTE = 77, // m-key mute
 
 	// for possible future use
-	// HYPER = 68, 					// d key
+	 DOWN = 40, 					// d key
 	// SHIELD = 65, 				// a key arrow
 	// NUM_ENTER = 10, 				// hyp
 	 SPECIAL = 70; 					// fire special weapon;  F key
@@ -116,8 +117,13 @@ public class Game implements Runnable, KeyListener {
 		// this thread animates the scene
 		while (Thread.currentThread() == thrAnim) {
 			tick();
-			spawnNewShipFloater();
-            spawnNewDiamond();
+			if (CommandCenter.movFoes.size()<5){
+                //Spawn new objects if there aren't many out there already
+                spawnNewShipFloater();
+                spawnNewDiamond();
+                spawnNewRock();
+                spawnGold();
+            }
             drawOffScreen();
 
 			//gmpPanel.update(gmpPanel.getGraphics()); // update takes the graphics context we must
@@ -290,6 +296,14 @@ public class Game implements Runnable, KeyListener {
 		//not an asteroid
 		else {
 			//remove the original Foe
+            if (movFoe instanceof Gold){
+                //Add 5 dollars to the miner's share if it is gold.
+                CommandCenter.setlDollars(CommandCenter.getlDollars()+ 5 );
+            }
+            else if (movFoe instanceof Diamond){
+                //Add 10 dollars to the miner's share if it is a diamond.
+                CommandCenter.setlDollars(CommandCenter.getlDollars()+ 10 );
+            }
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
 		}
 		
@@ -332,6 +346,22 @@ public class Game implements Runnable, KeyListener {
         }
     }
 
+    private void spawnNewRock() {
+        //Spawn a diamond and add it to the moveFoes array.
+        //Need to change this constant.
+        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+            CommandCenter.movFoes.add(new Rock(Game.R.nextInt(1) + 1));
+        }
+    }
+
+    private void spawnGold() {
+        //Spawn a diamond and add it to the moveFoes array.
+        //Need to change this constant.
+        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+            CommandCenter.movFoes.add(new Gold());
+        }
+    }
+
 	// Called when user presses 's'
 	private void startGame() {
 		CommandCenter.clearAll();
@@ -350,7 +380,6 @@ public class Game implements Runnable, KeyListener {
 			//CommandCenter.movFoes.add(new Asteroid(0));
 			//Add square asteroids
             CommandCenter.movFoes.add(new Asteroid(0));
-            //CommandCenter.movFoes.add(new SquareAsteroid(0));
 		}
 	}
 	
@@ -537,13 +566,9 @@ public class Game implements Runnable, KeyListener {
     private void drawScore(Graphics g) {
         g.setColor(Color.white);
         g.setFont(offScreenImage.getFnt());
-        if (CommandCenter.getScore() != 0) {
-            //Also draw the level
-            g.drawString("SCORE :  " + CommandCenter.getScore() + "     LEVEL: " + CommandCenter.getLevel(),
+            g.drawString("SCORE:  " + CommandCenter.getScore() + "     LEVEL:  " + CommandCenter.getLevel() +
+                         "     DOLLARS:  " + CommandCenter.getlDollars(),
                          offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
-        } else {
-            g.drawString("NO SCORE", offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
-        }
     }
 	
 	
@@ -581,16 +606,22 @@ public class Game implements Runnable, KeyListener {
 			case QUIT:
 				System.exit(0);
 				break;
-			case UP:
+			//Want up and down to not function and left and right to move the falcon by a constant amount right or left.
+            //
+            case UP:
 				fal.thrustOn();
 				if (!CommandCenter.isPaused())
 					clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
 				break;
 			case LEFT:
-				fal.rotateLeft();
+                fal.slideLeft();
+                if (!CommandCenter.isPaused())
+                    clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
+
+                //fal.rotateLeft();
 				break;
 			case RIGHT:
-				fal.rotateRight();
+				fal.slideRight();
 				break;
 
 			// possible future use
@@ -624,8 +655,10 @@ public class Game implements Runnable, KeyListener {
 				break;
 				
 			case LEFT:
-				fal.stopRotating();
-				break;
+				fal.thrustOff();
+				//fal.stopRotating();
+                clpThrust.stop();
+                break;
 			case RIGHT:
 				fal.stopRotating();
 				break;

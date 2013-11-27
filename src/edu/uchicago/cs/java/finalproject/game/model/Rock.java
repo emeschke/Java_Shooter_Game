@@ -6,19 +6,19 @@ import edu.uchicago.cs.java.finalproject.controller.Game;
 import java.awt.*;
 import java.util.Arrays;
 
-public class SquareAsteroid extends Sprite {
+public class Rock extends Sprite {
 
 
 	private int nSpin;
 
 	//radius of a large asteroid
-	private final int RAD = 10;
+	private final int RAD = 100;
 
 	//nSize determines if the Asteroid is Large (0), Medium (1), or Small (2)
 	//when you explode a Large asteroid, you should spawn 2 or 3 medium asteroids
 	//same for medium asteroid, you should spawn small asteroids
 	//small asteroids get blasted into debris
-	public SquareAsteroid(int nSize){
+	public Rock(int nSize){
 
 		//call Sprite constructor  Why do we need to call this constructor?
 		super();
@@ -48,18 +48,19 @@ public class SquareAsteroid extends Sprite {
 
 		//an nSize of zero is a big asteroid
 		//a nSize of 1 or 2 is med or small asteroid respectively
-		if (nSize == 0)
-			setRadius(RAD);
-		else
-			setRadius(RAD/(nSize * 2));
-
+		//Change to only have smaller asteroids.
+        //if (nSize == 0)
+		//	setRadius(RAD);
+		//else
+		//	setRadius(RAD/(nSize * 2));
+        setRadius(RAD/(nSize * 2));
 
 	}
 
+              /*
 
 
-
-	public SquareAsteroid(SquareAsteroid astExploded){
+	public Rock(Rock astExploded){
 	
 
 		//call Sprite constructor
@@ -98,7 +99,7 @@ public class SquareAsteroid extends Sprite {
 		
 
 	}
-	
+	        */
 	public int getSize(){
 		
 		int nReturn = 0;
@@ -123,10 +124,12 @@ public class SquareAsteroid extends Sprite {
 
         Point pnt = getCenter();
         double dX = pnt.x + getDeltaX();
+        //Make it so the asteroid doesn't move side to side.
+        //double dX = pnt.x;
 
-
+        //Make it so the asteroid doesn't move up and down.
         //double dY = pnt.y + getDeltaY();
-        double dY = pnt.y + getDeltaY();
+        double dY = pnt.y;
 
         //this just keeps the sprite inside the bounds of the frame
         if (pnt.x > getDim().width) {

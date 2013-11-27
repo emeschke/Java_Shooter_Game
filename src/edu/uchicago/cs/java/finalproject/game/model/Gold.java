@@ -5,31 +5,37 @@ import edu.uchicago.cs.java.finalproject.controller.Game;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Diamond extends Sprite {
+public class Gold extends Sprite {
 
 
 	private int nSpin;
 
-	public Diamond() {
+	public Gold() {
 
 		super();
 
 		ArrayList<Point> pntCs = new ArrayList<Point>();
 		// top of ship
-		//pntCs.add(new Point(5, 5));
+		pntCs.add(new Point(5, 5));
 		pntCs.add(new Point(4,0));
-		//pntCs.add(new Point(5, -5));
+		pntCs.add(new Point(4,2));
+		pntCs.add(new Point(2,4));
+		pntCs.add(new Point(1,1));
+		pntCs.add(new Point(5, -5));
 		pntCs.add(new Point(0,-4));
-		//pntCs.add(new Point(-5, -5));
+		pntCs.add(new Point(-2,1));
+        pntCs.add(new Point(-5, -5));
 		pntCs.add(new Point(-4,0));
-		//pntCs.add(new Point(-5, 5));
+		pntCs.add(new Point(2,-2));
+		pntCs.add(new Point(1,-2));
+		pntCs.add(new Point(-5, 5));
 		pntCs.add(new Point(0,4));
 
 		assignPolarPoints(pntCs);
 
 		setExpire(250);
 		setRadius(50);
-		setColor(Color.WHITE);
+		setColor(Color.YELLOW);
 
 
 		//int nX = Game.R.nextInt(10);

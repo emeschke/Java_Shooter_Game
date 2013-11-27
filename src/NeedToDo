@@ -1,0 +1,25 @@
+Asteroid miner...Mine gold and silver from the asteroid belt--kill asteroids to gain points and level up.
+
+Asteroid, precious metals and ships go from right to left (or the same direction.)  Cursor (shooter) is a laser?  and can
+move back and forth across the bottom of the screen.  Occasionally something falls straight down and can kill the shooter.
+
+There is a maximum number of asteroids, gold, silver, and ships that are floating around.
+
+Are there good things that fall down to capture also?  In addition to asteroids to avoid.
+
+Shooter can move back and forth but can't move up or down.  It is always oriented toward the top.
+
+Add music that is cool everytime we shoot a music button or pass a level.
+
+Need to get:
+--Get cursor/falcon moving sideways
+--Create classes for gold, silver, ship that is sideways and asteroids of small, fixed size.XXXXXXXX
+--Restrict the above classes to only go sideways in a set range (above cursor/falcon)XXXXXXXX
+--Add dollar value for money.XXXXXXXX
+--Add points for asteroids.XXXXXXXX
+--Rule to advance levels.
+--Speed of horizontal objects speeds up with level; more things fall with new level?
+--Create a certain amount of gold to silver randomly in a ratio.
+--Create class that falls down (bad)
+--Create class that falls down (good)
+--Restrict count of different items to a set amountXXXXXXXXXXXX
