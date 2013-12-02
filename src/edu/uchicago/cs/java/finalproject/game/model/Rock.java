@@ -4,13 +4,13 @@ package edu.uchicago.cs.java.finalproject.game.model;
 import edu.uchicago.cs.java.finalproject.controller.Game;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Rock extends Sprite {
 
 
 	private int nSpin;
-
 	//radius of a large asteroid
 	private final int RAD = 100;
 
@@ -22,9 +22,12 @@ public class Rock extends Sprite {
 
 		//call Sprite constructor  Why do we need to call this constructor?
 		super();
+        setCenter(new Point(Game.R.nextInt(Game.DIM.width),
+                Game.R.nextInt(Game.DIM.height)*(3/4)));
+        setColor(new Color(Game.R.nextInt(255), Game.R.nextInt(255), Game.R.nextInt(255)));
 
 
-		//the spin will be either plus or minus 0-9
+        //the spin will be either plus or minus 0-9
 		int nSpin = Game.R.nextInt(10);
 		if(nSpin %2 ==0)
 			nSpin = -nSpin;
@@ -119,7 +122,18 @@ public class Rock extends Sprite {
 		
 	}
 
-	//overridden
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
+        //fill this polygon (with whatever color it has)
+        g.fillPolygon(getXcoords(), getYcoords(), dDegrees.length);
+        //now draw a white border
+        g.setColor(new Color(Game.R.nextInt(255),Game.R.nextInt(255),Game.R.nextInt(255)));
+        g.drawPolygon(getXcoords(), getYcoords(), dDegrees.length);
+
+    }
+
+    //overridden
 	public void move(){
 
         Point pnt = getCenter();

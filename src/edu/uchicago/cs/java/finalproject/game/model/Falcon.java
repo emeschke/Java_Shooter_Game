@@ -44,7 +44,7 @@ public class Falcon extends Sprite {
 	
 	public Falcon() {
 		super();
-
+        slideShip = 0;
 		ArrayList<Point> pntCs = new ArrayList<Point>();
 		
 		// top of ship
@@ -113,8 +113,28 @@ public class Falcon extends Sprite {
 	// ==============================================================
 
 	public void move() {
-		super.move();
-		/*if (bThrusting) {
+        Point pnt = getCenter();
+        double dX = pnt.x + getDeltaX();
+        double dY = pnt.y + getDeltaY();
+
+
+        //this just keeps the sprite inside the bounds of the frame
+        if (pnt.x > getDim().width) {
+            setCenter(new Point(1, pnt.y));
+
+        } else if (pnt.x < 0) {
+            setCenter(new Point(getDim().width - 1, pnt.y));
+        } else if (pnt.y > getDim().height) {
+            setCenter(new Point(pnt.x, 1));
+
+        } else if (pnt.y < 0) {
+            setCenter(new Point(pnt.x, getDim().height - 1));
+        } else {
+
+            setCenter(new Point((int) dX, (int) dY));
+        }
+        System.out.println(getDeltaX());
+        /*if (bThrusting) {
 			bFlame = true;
 			double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
 					* THRUST;
@@ -136,7 +156,7 @@ public class Falcon extends Sprite {
             //		* THRUST;
             //setDeltaX(getDeltaX() + dAdjustX);
             //Try to get it to move back and forth.  Works partly, but not well.
-            setDeltaX(getDeltaX() + slideShip*.25);
+            setDeltaX(slideShip);
             //Only let the falcon move left and right.
             //setDeltaY(getDeltaY() + dAdjustY);
             setDeltaY(getDeltaY() );
@@ -164,14 +184,14 @@ public class Falcon extends Sprite {
 
     public void slideLeft(){
         //for a left button key press, decrement the slide variable 1, or leave it at -1 if ship is already sliding left
-        if (slideShip != -1){
+        if (slideShip != -10){
             slideShip -= 1;
         }
     }
 
     public void slideRight(){
         //for a rt button key press, increment the slide variable 1, or leave it at 1 if ship is already sliding right
-        if (slideShip != 1){
+        if (slideShip != 10){
             slideShip += 1;
         }
     }
@@ -186,6 +206,11 @@ public class Falcon extends Sprite {
 		bTurningRight = false;
 		bTurningLeft = false;
 	}
+
+    public void stopShip(){
+        slideShip = 0;
+        bFlame = false;
+    }
 
 	public void thrustOn() {
 		bThrusting = true;

@@ -68,9 +68,10 @@ public class NewShipFloater extends Sprite {
     public void move() {
 
         Point pnt = getCenter();
-        double dX = pnt.x;
-        double dY = pnt.y + getDeltaY();
-
+        double dX = pnt.x + getDeltaX();
+        double dY = pnt.y + 4;
+        //double dY = pnt.y + getDeltaY();
+        //System.out.println(getDeltaY());
         //this just keeps the sprite inside the bounds of the frame
         if (pnt.x > getDim().width) {
             setCenter(new Point(1, pnt.y));

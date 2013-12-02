@@ -75,7 +75,6 @@ public class Game implements Runnable, KeyListener {
 
 		clpThrust = Sound.clipForLoopFactory("whitenoise.wav");
 		clpMusicBackground = Sound.clipForLoopFactory("music-background.wav");
-	
 
 	}
 
@@ -125,6 +124,7 @@ public class Game implements Runnable, KeyListener {
                 spawnGold();
             }
             drawOffScreen();
+            clpMusicBackground.loop(3);
 
 			//gmpPanel.update(gmpPanel.getGraphics()); // update takes the graphics context we must
 														// surround the sleep() in a try/catch block
@@ -229,7 +229,7 @@ public class Game implements Runnable, KeyListener {
 	
 				    CommandCenter.setNumFalcons(CommandCenter.getNumFalcons()+1);
 					tupMarkForRemovals.add(new Tuple(CommandCenter.movFloaters, movFloater));
-					Sound.playSound("pacman_eatghost.wav");
+					Sound.playSound("Our Romatic.mp3");
 	
 				}//end if 
 			}//end inner for
@@ -283,10 +283,10 @@ public class Game implements Runnable, KeyListener {
 			} 
 			//medium size aseroid exploded
 			else if(astExploded.getSize() == 1){
-				//spawn three small Asteroids
+				//spawn two small Asteroids
 				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
 				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+				//tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
 			}
 			//remove the original Foe	
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
@@ -609,8 +609,8 @@ public class Game implements Runnable, KeyListener {
 			//Want up and down to not function and left and right to move the falcon by a constant amount right or left.
             //
             case UP:
-				fal.thrustOn();
-				if (!CommandCenter.isPaused())
+				fal.stopShip();
+                if (!CommandCenter.isPaused())
 					clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
 				break;
 			case LEFT:
