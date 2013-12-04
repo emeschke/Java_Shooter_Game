@@ -206,7 +206,7 @@ public class Falcon extends Sprite {
 	}
 
     public void stopShip(){
-        slideShip = 0;
+        setDeltaX(0);
         bFlame = false;
     }
 
