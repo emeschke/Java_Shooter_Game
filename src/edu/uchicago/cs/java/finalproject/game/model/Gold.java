@@ -26,8 +26,8 @@ public class Gold extends Sprite {
 		pntCs.add(new Point(-2,1));
         pntCs.add(new Point(-5, -5));
 		pntCs.add(new Point(-4,0));
-		pntCs.add(new Point(2,-2));
 		pntCs.add(new Point(1,-2));
+		pntCs.add(new Point(2,-2));
 		pntCs.add(new Point(-5, 5));
 		pntCs.add(new Point(0,4));
 

@@ -59,6 +59,7 @@ public class Diamond extends Sprite {
 		//	setSpin(-nS);
 
 		//random point on the screen
+        //Make sure the diamonds are not in the bottom third of the screen.
         setCenter(new Point(Game.R.nextInt(Game.DIM.width),
                 Game.R.nextInt(Game.DIM.height)*2/3));
         //Set the center at 100, 100
@@ -74,6 +75,7 @@ public class Diamond extends Sprite {
         Point pnt = getCenter();
         //double dX = pnt.x + getDeltaX();
         //This changes it to 3-6 for the speed.
+        //Make it move only right and left.
         double dX = pnt.x + getDeltaX();
         //double dY = pnt.y + getDeltaY();
         double dY = pnt.y;
