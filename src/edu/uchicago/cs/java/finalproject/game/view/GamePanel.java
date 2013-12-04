@@ -25,37 +25,22 @@ import edu.uchicago.cs.java.finalproject.game.model.Movable;
 	// ==============================================================
 	// FIELDS 
 	// ============================================================== 
-	 
-	// The following "off" vars are used for the off-screen double-bufferred image. 
-	private Dimension dimOff;
-	private Image imgOff;
-	private Graphics grpOff;
-	
 	private GameFrame gmf;
-	private Font fnt = new Font("SansSerif", Font.BOLD, 12);
-	private Font fntBig = new Font("SansSerif", Font.BOLD + Font.ITALIC, 36);
-	private FontMetrics fmt; 
-	private int nFontWidth;
-	private int nFontHeight;
-	private String strDisplay = "";
-	
+    private OffScreenImage offScreenImage;
 
-	// ==============================================================
-	// CONSTRUCTOR 
-	// ==============================================================
-	
-	public GamePanel(Dimension dim){
+	public GamePanel(Dimension dim, OffScreenImage off){
 	    gmf = new GameFrame();
+        offScreenImage = off;
 		gmf.getContentPane().add(this);
 		gmf.pack();
-		initView();
-		
 		gmf.setSize(dim);
 		gmf.setTitle("Game Base");
-		gmf.setResizable(false);
+		//Change resizeable to true to make it resizeable.
+        gmf.setResizable(false);
 		gmf.setVisible(true);
 		this.setFocusable(true);
 	}
+<<<<<<< HEAD
 	
 	
 	// ==============================================================
@@ -189,37 +174,13 @@ import edu.uchicago.cs.java.finalproject.game.model.Movable;
 		grpOff.drawString(strDisplay,
 				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
 						+ nFontHeight + 80);
+=======
+>>>>>>> Branch2
 
-		strDisplay = "'S' to Start";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 120);
+     //when we call repaint, update is called
+     public void update(Graphics g){
+         g.drawImage(offScreenImage.getImgOff(), 0, 0, this);
+     }
 
-		strDisplay = "'P' to Pause";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 160);
 
-		strDisplay = "'Q' to Quit";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 200);
-		strDisplay = "left pinkie on 'A' for Shield";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 240);
-
-		strDisplay = "left index finger on 'F' for Guided Missile";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 280);
-
-		strDisplay = "'Numeric-Enter' for Hyperspace";
-		grpOff.drawString(strDisplay,
-				(Game.DIM.width - fmt.stringWidth(strDisplay)) / 2, Game.DIM.height / 4
-						+ nFontHeight + 320);
-	}
-	
-	public GameFrame getFrm() {return this.gmf;}
-	public void setFrm(GameFrame frm) {this.gmf = frm;}	
 }

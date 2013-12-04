@@ -1,6 +1,7 @@
 package edu.uchicago.cs.java.finalproject.game.model;
 
 
+import java.awt.*;
 import java.util.Arrays;
 
 import edu.uchicago.cs.java.finalproject.controller.Game;
@@ -19,7 +20,7 @@ public class Asteroid extends Sprite {
 	//small asteroids get blasted into debris
 	public Asteroid(int nSize){
 		
-		//call Sprite constructor
+		//call Sprite constructor  Why do we need to call this constructor?
 		super();
 		
 		
@@ -30,14 +31,16 @@ public class Asteroid extends Sprite {
 		setSpin(nSpin);
 			
 		//random delta-x
+        //We don't need this because the asteroids only move up and down.
 		int nDX = Game.R.nextInt(10);
-		if(nDX %2 ==0)
+        if(nDX %2 ==0)
 			nDX = -nDX;
 		setDeltaX(nDX);
 		
 		//random delta-y
-		int nDY = Game.R.nextInt(10);
-		if(nDY %2 ==0)
+		//Make sure the asteroids always move, so choose a speed for the y axis between 1-11.
+        int nDY = Game.R.nextInt(10) + 1;
+        if(nDY %2 ==0)
 			nDY = -nDY;
 		setDeltaY(nDY);
 			
@@ -78,8 +81,9 @@ public class Asteroid extends Sprite {
 		setDeltaX(nDX);
 		
 		//random delta-y
-		int nDY = Game.R.nextInt(10+ nSizeNew*2);
-		if(nDY %2 ==0)
+		//Random number plus the Size of the new one and a constant to make sure the asteroid moves some.
+        int nDY = Game.R.nextInt(10+ nSizeNew*2) + 1;
+        if(nDY %2 ==0)
 			nDY = -nDY;
 		setDeltaY(nDY);
 			
@@ -117,9 +121,34 @@ public class Asteroid extends Sprite {
 
 	//overridden
 	public void move(){
-		super.move();
-		
-		//an asteroid spins, so you need to adjust the orientation at each move()
+
+        Point pnt = getCenter();
+        //Make it so the asteroid doesn't move side to side.  Do this by over-riding the method and leaving the x coor
+        //the same.
+        double dX = pnt.x;
+
+
+        //double dY = pnt.y + getDeltaY();
+        double dY = pnt.y + getDeltaY();
+
+        //this just keeps the sprite inside the bounds of the frame
+        if (pnt.x > getDim().width) {
+            setCenter(new Point(1, pnt.y));
+
+        } else if (pnt.x < 0) {
+            setCenter(new Point(getDim().width - 1, pnt.y));
+        } else if (pnt.y > getDim().height) {
+            setCenter(new Point(pnt.x, 1));
+
+        } else if (pnt.y < 0) {
+            setCenter(new Point(pnt.x, getDim().height - 1));
+        } else {
+
+            setCenter(new Point((int) dX, (int) dY));
+        }
+
+
+        //an asteroid spins, so you need to adjust the orientation at each move()
 		setOrientation(getOrientation() + getSpin());
 		
 	}

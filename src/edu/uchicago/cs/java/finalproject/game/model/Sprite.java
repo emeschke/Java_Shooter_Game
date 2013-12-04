@@ -50,8 +50,9 @@ public abstract class Sprite implements Movable {
 		Point pnt = getCenter();
 		double dX = pnt.x + getDeltaX();
 		double dY = pnt.y + getDeltaY();
-		
-		//this just keeps the sprite inside the bounds of the frame
+
+
+        //this just keeps the sprite inside the bounds of the frame
 		if (pnt.x > getDim().width) {
 			setCenter(new Point(1, pnt.y));
 

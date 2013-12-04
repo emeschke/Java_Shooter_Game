@@ -11,6 +11,8 @@ public class CommandCenter {
 	private static int nNumFalcon;
 	private static int nLevel;
 	private static long lScore;
+    //Had a feature in here to deal with dollars, it is now removed.
+    private static long lDollars;
 	private static Falcon falShip;
 	private static boolean bPlaying;
 	private static boolean bPaused;
@@ -77,7 +79,15 @@ public class CommandCenter {
 		return false;
 	}
 
-	public static int getLevel() {
+    public static long getlDollars() {
+        return lDollars;
+    }
+
+    public static void setlDollars(long lDollars) {
+        CommandCenter.lDollars = lDollars;
+    }
+
+    public static int getLevel() {
 		return nLevel;
 	}
 

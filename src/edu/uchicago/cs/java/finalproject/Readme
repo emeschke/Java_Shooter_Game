@@ -1,0 +1,36 @@
+Thanks for playing the game.  It is self-explanatory--the code base is modified and a nice soundtrack has been added.
+
+Controller:
+The game class is very much changed to reflect the differences between the original game engine and my game.  The changes
+are documented within the the class.
+
+Tuple is unchanged.
+
+View:
+Classes are unchanged.
+
+Model:
+Asteroid -- Restricted so that the clear asteroids only move up and down.  Some changes in the way they spawn, an
+asteroid that is destroyed will spawn 0,1,2 new ones.  Also within the move method the deltaX that controls the movement
+is set between 1-11 rather than 0-10 (as a random number) because otherwise sometimes the asteroids were getting
+stuck not moving at the bottom of the screen where the ship goes.  Asteroids contribute 10 points to the score when they
+are destroyed.
+
+Bullet, CommandCenter, Debris, Movable, Sprite not changed.
+
+Diamond, Gold -- New classes.  Originally these were intended to be created around a mining concept but then it turned
+into a normal shooter game.  These two create different shapes that are restricted to the the top 2/3rds of the screen.
+They contribute 5 points when they are destroyed.
+
+Rock -- Similar to asteroid except it moves horizontally and the asteroids are random colors.  These are worth 15
+points when they are destroyed.
+
+Falcon -- Falcon is anchored at the bottom of the screen and moves side to side.  The movement is not as streamlined as
+it should be, but the idea is there is a slide variable that is added to every time the right/left key is pressed until
+a maximum value of +/- 10.  In the over-ridden move method that is added to the mid-point to adjust the ship right and
+left.  The down key sets the slide value to zero so the ship is stopped. Also falcon's shape is changed.
+
+NewShipFloater -- Changed to move diagonally, with a random x component and a y component of 4.  Otherwise the same.
+
+
+
