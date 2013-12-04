@@ -61,8 +61,8 @@ public class Game implements Runnable, KeyListener {
 
 
 
-    //Original at 1200.
-	private static final int SPAWN_NEW_SHIP_FLOATER = 100;
+    //Constants to spawn different rocks and floaters.
+	private static final int SPAWN_NEW_SHIP_FLOATER = 200;
 	private static final int SPAWN_NEW_ROCK = 100;
 	private static final int SPAWN_NEW_GOLD = 100;
 	private static final int SPAWN_NEW_DIAMOND = 100;
@@ -77,9 +77,8 @@ public class Game implements Runnable, KeyListener {
         offScreenImage = new OffScreenImage();
 		gmpPanel = new GamePanel(DIM,offScreenImage);
 		gmpPanel.addKeyListener(this);
-
+        //Set the sound for thrust and the initialize the background music to a random clip.
 		clpThrust = Sound.clipForLoopFactory("whitenoise.wav");
-		//clpMusicBackground = Sound.clipForLoopFactory("BonJovi_ItsMyLife.wav");
 		clpMusicBackground = randomClip();
 
 	}
@@ -201,7 +200,6 @@ public class Game implements Runnable, KeyListener {
 							CommandCenter.spawnFalcon(false);
                             createDebris((Sprite)movFoe, tupMarkForAdds);
                             createDebris((Sprite)movFriend, tupMarkForAdds);
-
 							killFoe(movFoe);
 						}
 					}
@@ -289,38 +287,22 @@ public class Game implements Runnable, KeyListener {
 	private void killFoe(Movable movFoe) {
 
         if (movFoe instanceof Asteroid){
-            //If statement to check the whether to update the level every 100 points.  Make this a new method?
-            //This only works sometimes.
+            //Add 10 points to the score if it is an asteroid.
             CommandCenter.setScore(CommandCenter.getScore()+10);
-            if (((CommandCenter.getScore()%100) == 0)){
-                System.out.println("Changing level.");
-                CommandCenter.setLevel(CommandCenter.getLevel() + 1 );
-                clpMusicBackground.stop();
-                clpMusicBackground = randomClip();
-            }
 
 			//we know this is an Asteroid, so we can cast without threat of ClassCastException
 			Asteroid astExploded = (Asteroid)movFoe;
-			//big asteroid 
-			if(astExploded.getSize() == 0){
-				int choice = Game.R.nextInt(3);
-				//spawn two, one or zero medium Asteroids
-				if (choice == 2){
-                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-	    			tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-                }
-                else if (choice ==1){
-                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-                }
-			} 
-			//medium size aseroid exploded
-			else if(astExploded.getSize() == 1){
+
+			//blow up a medium or large asteroid into either 0,1,2 pieces
+		    if(astExploded.getSize() == 1 || astExploded.getSize() == 0){
+                //random number to choose how many new asteroids.
                 int choice = Game.R.nextInt(3);
-                //spawn two small Asteroids
+                //spawn two new smaller Asteroids
                 if (choice == 2){
                     tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
                     tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
                 }
+                //spawn one new smaller Asteroid.
                 else if (choice ==1){
                     tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
                 }
@@ -330,21 +312,34 @@ public class Game implements Runnable, KeyListener {
 		
 			
 		} 
-		//not an asteroid
+		//not an asteroid.  Add points for the other types of asteroids.
 		else {
 			//remove the original Foe
             if (movFoe instanceof Gold){
-                //Add 5 dollars to the miner's share if it is gold.
-                CommandCenter.setlDollars(CommandCenter.getlDollars()+ 5 );
+                //Add 5 points to the score.
+                CommandCenter.setScore(CommandCenter.getScore()+ 5 );
             }
             else if (movFoe instanceof Diamond){
-                //Add 10 dollars to the miner's share if it is a diamond.
-                CommandCenter.setlDollars(CommandCenter.getlDollars()+ 10 );
+                //Add 5 points to the score.
+                CommandCenter.setScore(CommandCenter.getScore()+ 5 );
+            }
+            else if (movFoe instanceof Rock){
+                //Add 15 points to the score.
+                CommandCenter.setScore(CommandCenter.getScore()+ 15 );
             }
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
 		}
 
-	}
+        //Check whether the level has changed.  Since score/100 is the level, if the two don't match change the level
+        //and change the music clip.
+        if (CommandCenter.getLevel() != ((int) CommandCenter.getScore()/100)){
+            CommandCenter.setLevel(CommandCenter.getLevel() + 1 );
+            clpMusicBackground.stop();
+            clpMusicBackground = randomClip();
+        }
+
+
+    }
 
 	//some methods for timing events in the game,
 	//such as the appearance of UFOs, floaters (power-ups), etc. 
@@ -358,6 +353,9 @@ public class Game implements Runnable, KeyListener {
 	public int getTick() {
 		return nTick;
 	}
+
+    //These methods to spawn use the same logic that was originally in the game.  There is a constant above to determine
+    //the frequency that things are created.
 
 	private void spawnNewShipFloater() {
 		//make the appearance of power-up dependent upon ticks and levels
@@ -407,8 +405,6 @@ public class Game implements Runnable, KeyListener {
 	private void spawnAsteroids(int nNum) {
 		for (int nC = 0; nC < nNum; nC++) {
 			//Asteroids with size of zero are big
-			//CommandCenter.movFoes.add(new Asteroid(0));
-			//Add square asteroids
             CommandCenter.movFoes.add(new Asteroid(0));
 		}
 	}
@@ -435,9 +431,8 @@ public class Game implements Runnable, KeyListener {
 		if (isLevelClear() ){
 			if (CommandCenter.getFalcon() !=null)
 				CommandCenter.getFalcon().setProtected(true);
-			
-			spawnAsteroids(CommandCenter.getLevel() + 2);
-			CommandCenter.setLevel(CommandCenter.getLevel() + 1);
+            //Add two asteriods if there are none on the screen.
+			spawnAsteroids(2);
 
 		}
 	}
@@ -476,6 +471,7 @@ public class Game implements Runnable, KeyListener {
                     CommandCenter.movFriends);
 
 
+            //Draw the number of ships left.
             drawNumberShipsLeft(grpOff);
             if (CommandCenter.isGameOver()) {
                 CommandCenter.setPlaying(false);
@@ -550,7 +546,7 @@ public class Game implements Runnable, KeyListener {
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4);
 
-        strDisplay = "use the arrow keys to turn and thrust";
+        strDisplay = "use the arrow keys to move the ship back and forth.";
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4
                 + offScreenImage.getFontHeight() + 40);
@@ -574,17 +570,18 @@ public class Game implements Runnable, KeyListener {
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4
                 + offScreenImage.getFontHeight() + 200);
-        strDisplay = "left pinkie on 'A' for Shield";
+
+        strDisplay = "Colored asteroids are 5 points, Clear asteroids are 10 points.";
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4
                 + offScreenImage.getFontHeight() + 240);
 
-        strDisplay = "left index finger on 'F' for Guided Missile";
+        strDisplay = "Blue diamonds are extra lives.  100 points moves a level up.";
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4
                 + offScreenImage.getFontHeight() + 280);
 
-        strDisplay = "'Numeric-Enter' for Hyperspace";
+        strDisplay = "Watch out for the clear asteroids and enjoy the music!";
         grpOff.drawString(strDisplay,
                 (Game.DIM.width - offScreenImage.getFmt().stringWidth(strDisplay)) / 2, Game.DIM.height / 4
                 + offScreenImage.getFontHeight() + 320);
@@ -594,10 +591,10 @@ public class Game implements Runnable, KeyListener {
 
 
     private void drawScore(Graphics g) {
+        //Changed a few things to draw the Level as well.
         g.setColor(Color.white);
         g.setFont(offScreenImage.getFnt());
-            g.drawString("SCORE:  " + CommandCenter.getScore() + "     LEVEL:  " + CommandCenter.getLevel() +
-                         "     DOLLARS:  " + CommandCenter.getlDollars(),
+            g.drawString("SCORE:  " + CommandCenter.getScore() + "     LEVEL:  " + CommandCenter.getLevel(),
                          offScreenImage.getFontWidth(), offScreenImage.getFontHeight());
     }
 	
@@ -633,31 +630,22 @@ public class Game implements Runnable, KeyListener {
 				else
 					clpMusicBackground.loop(Clip.LOOP_CONTINUOUSLY);
 				break;
+
 			case QUIT:
 				System.exit(0);
 				break;
-			//Want up and down to not function and left and right to move the falcon by a constant amount right or left.
-            //
+
             case DOWN:
 				fal.stopShip();
-                //if (!CommandCenter.isPaused())
-				//	clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
-				break;
+                break;
+
 			case LEFT:
                 fal.slideLeft();
-                //if (!CommandCenter.isPaused())
-                //    clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                break;
 
-                //fal.rotateLeft();
-				break;
 			case RIGHT:
 				fal.slideRight();
-				break;
-
-			// possible future use
-			// case KILL:
-			// case SHIELD:
-			// case NUM_ENTER:
+                break;
 
 			default:
 				break;
@@ -669,7 +657,6 @@ public class Game implements Runnable, KeyListener {
 	public void keyReleased(KeyEvent e) {
 		Falcon fal = CommandCenter.getFalcon();
 		int nKey = e.getKeyCode();
-		 //System.out.println(nKey);
 
 		if (fal != null) {
 			switch (nKey) {
@@ -678,22 +665,17 @@ public class Game implements Runnable, KeyListener {
 				Sound.playSound("laser.wav");
 				break;
 				
-			//special is a special weapon, current it just fires the cruise missile. 
-			case SPECIAL:
-				CommandCenter.movFriends.add(new Cruise(fal));
-				//Sound.playSound("laser.wav");
-				break;
-				
 			case LEFT:
-				fal.thrustOff();
-				//fal.stopRotating();
-                clpThrust.stop();
+				//fal.thrustOff();
+                //clpThrust.stop();
                 break;
+
 			case RIGHT:
-				fal.stopRotating();
+				//fal.stopRotating();
 				break;
-			case UP:
-				fal.thrustOff();
+
+			case DOWN:
+				fal.stopShip();
 				clpThrust.stop();
 				break;
 				

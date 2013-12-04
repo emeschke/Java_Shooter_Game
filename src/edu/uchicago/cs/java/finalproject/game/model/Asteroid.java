@@ -31,15 +31,15 @@ public class Asteroid extends Sprite {
 		setSpin(nSpin);
 			
 		//random delta-x
+        //We don't need this because the asteroids only move up and down.
 		int nDX = Game.R.nextInt(10);
-		//Not sure what this does, setting it to a constant doesn't change things.
-		//int nDX = 3;
         if(nDX %2 ==0)
 			nDX = -nDX;
 		setDeltaX(nDX);
 		
 		//random delta-y
-		int nDY = Game.R.nextInt(10);
+		//Make sure the asteroids always move, so choose a speed for the y axis between 1-11.
+        int nDY = Game.R.nextInt(10) + 1;
         if(nDY %2 ==0)
 			nDY = -nDY;
 		setDeltaY(nDY);
@@ -81,8 +81,9 @@ public class Asteroid extends Sprite {
 		setDeltaX(nDX);
 		
 		//random delta-y
-		int nDY = Game.R.nextInt(10+ nSizeNew*2);
-		if(nDY %2 ==0)
+		//Random number plus the Size of the new one and a constant to make sure the asteroid moves some.
+        int nDY = Game.R.nextInt(10+ nSizeNew*2) + 1;
+        if(nDY %2 ==0)
 			nDY = -nDY;
 		setDeltaY(nDY);
 			
@@ -122,8 +123,8 @@ public class Asteroid extends Sprite {
 	public void move(){
 
         Point pnt = getCenter();
-        //double dX = pnt.x + getDeltaX();
-        //Make it so the asteroid doesn't move side to side.
+        //Make it so the asteroid doesn't move side to side.  Do this by over-riding the method and leaving the x coor
+        //the same.
         double dX = pnt.x;
 
 

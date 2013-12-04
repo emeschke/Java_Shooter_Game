@@ -48,35 +48,13 @@ public class Falcon extends Sprite {
 		// top of ship
 		pntCs.add(new Point(0, 18)); 
 		
-		//right points  Original points
-        /*
-		pntCs.add(new Point(3, 3)); 
-		pntCs.add(new Point(12, 0)); 
-		pntCs.add(new Point(13, -2)); 
-		pntCs.add(new Point(13, -4)); 
-		pntCs.add(new Point(11, -2)); 
-		pntCs.add(new Point(4, -3)); 
-		pntCs.add(new Point(2, -10)); 
-		pntCs.add(new Point(4, -12)); 
-		pntCs.add(new Point(2, -13)); 
-
-		//left points
-		pntCs.add(new Point(-2, -13)); 
-		pntCs.add(new Point(-4, -12));
-		pntCs.add(new Point(-2, -10)); 
-		pntCs.add(new Point(-4, -3)); 
-		pntCs.add(new Point(-11, -2));
-		pntCs.add(new Point(-13, -4));
-		pntCs.add(new Point(-13, -2)); 
-		pntCs.add(new Point(-12, 0)); 
-		pntCs.add(new Point(-3, 3)); 
-		*/
-
+		//right points  Original
         pntCs.add(new Point(3, 3));
         pntCs.add(new Point(12, 0));
         pntCs.add(new Point(13, -2));
         pntCs.add(new Point(13, -4));
 
+        //left points
         pntCs.add(new Point(-13, -4));
         pntCs.add(new Point(-13, -2));
         pntCs.add(new Point(-12, 0));
@@ -87,7 +65,7 @@ public class Falcon extends Sprite {
 		setColor(Color.white);
 		
 		//put falcon in the middle.
-        //Set the falcon in the middle.
+        //Set the falcon in the middle, but a 9/10 of the bottom of the screen, starting from the top.
         //setCenter(new Point(Game.DIM.width / 2, Game.DIM.height / 2));
         setCenter(new Point(Game.DIM.width / 2, 9*Game.DIM.height/10 ));
 
@@ -112,9 +90,10 @@ public class Falcon extends Sprite {
 
 	public void move() {
         Point pnt = getCenter();
-        double dX = pnt.x + getDeltaX();
+        //double dX = pnt.x + getDeltaX();
+        double dX = pnt.x + slideShip;
         double dY = pnt.y + getDeltaY();
-
+        //double dY = pnt.y + getDeltaY();
 
         //this just keeps the sprite inside the bounds of the frame
         if (pnt.x > getDim().width) {
@@ -131,47 +110,16 @@ public class Falcon extends Sprite {
 
             setCenter(new Point((int) dX, (int) dY));
         }
-        //System.out.println(getDeltaX());
-        /*if (bThrusting) {
-			bFlame = true;
-			double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
-					* THRUST;
-			//double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
-			//		* THRUST;
-			//setDeltaX(getDeltaX() + dAdjustX);
-			//Try to get it to move back and forth.  Works partly, but not well.
-            setDeltaX(getDeltaX() + 1);
-			//Only let the falcon move left and right.
-			//setDeltaY(getDeltaY() + dAdjustY);
-			setDeltaY(getDeltaY() );
-		}
-        */
+
         if (slideShip != 0) {
             bFlame = true;
             double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
                     * THRUST;
-            //double dAdjustY = Math.sin(Math.toRadians(getOrientation()))
-            //		* THRUST;
-            //setDeltaX(getDeltaX() + dAdjustX);
             //Try to get it to move back and forth.  Works partly, but not well.
             setDeltaX(slideShip);
             //Only let the falcon move left and right.
-            //setDeltaY(getDeltaY() + dAdjustY);
             setDeltaY(getDeltaY() );
         }
-		if (bTurningLeft) {
-
-			//if (getOrientation() <= 0 && bTurningLeft) {
-			//	setOrientation(360);
-			//}
-			//setOrientation(getOrientation() - DEGREE_STEP);
-		} 
-		if (bTurningRight) {
-			if (getOrientation() >= 360 && bTurningRight) {
-				setOrientation(0);
-			}
-			setOrientation(getOrientation() + DEGREE_STEP);
-		} 
 	} //end move
 
 	public void rotateLeft() {
@@ -206,8 +154,9 @@ public class Falcon extends Sprite {
 	}
 
     public void stopShip(){
-        setDeltaX(0);
+        slideShip = 0;
         bFlame = false;
+        setDeltaX(0);
     }
 
 	public void thrustOn() {

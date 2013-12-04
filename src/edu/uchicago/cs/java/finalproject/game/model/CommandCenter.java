@@ -11,7 +11,7 @@ public class CommandCenter {
 	private static int nNumFalcon;
 	private static int nLevel;
 	private static long lScore;
-    //Add a counter for dollars.
+    //Had a feature in here to deal with dollars, it is now removed.
     private static long lDollars;
 	private static Falcon falShip;
 	private static boolean bPlaying;
