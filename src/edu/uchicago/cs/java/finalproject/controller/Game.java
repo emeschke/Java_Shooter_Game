@@ -43,23 +43,29 @@ public class Game implements Runnable, KeyListener {
 			QUIT = 81, // q key
 			LEFT = 37, // rotate left; left arrow
 			RIGHT = 39, // rotate right; right arrow
-
+            DOWN = 40, 	// d key
             UP = 38, // thrust; up arrow
 			START = 83, // s key
 			FIRE = 32, // space key
 			MUTE = 77, // m-key mute
 
 	// for possible future use
-	 DOWN = 40, 					// d key
 	// SHIELD = 65, 				// a key arrow
 	// NUM_ENTER = 10, 				// hyp
 	 SPECIAL = 70; 					// fire special weapon;  F key
 
 	private Clip clpThrust;
 	private Clip clpMusicBackground;
+    private static ArrayList<Clip> clipArray= new ArrayList<Clip>();
+
+
+
 
     //Original at 1200.
 	private static final int SPAWN_NEW_SHIP_FLOATER = 100;
+	private static final int SPAWN_NEW_ROCK = 100;
+	private static final int SPAWN_NEW_GOLD = 100;
+	private static final int SPAWN_NEW_DIAMOND = 100;
 
 
 
@@ -68,13 +74,13 @@ public class Game implements Runnable, KeyListener {
 	// ===============================================
 
 	public Game() {
-
         offScreenImage = new OffScreenImage();
 		gmpPanel = new GamePanel(DIM,offScreenImage);
 		gmpPanel.addKeyListener(this);
 
 		clpThrust = Sound.clipForLoopFactory("whitenoise.wav");
-		clpMusicBackground = Sound.clipForLoopFactory("music-background.wav");
+		//clpMusicBackground = Sound.clipForLoopFactory("BonJovi_ItsMyLife.wav");
+		clpMusicBackground = randomClip();
 
 	}
 
@@ -83,11 +89,13 @@ public class Game implements Runnable, KeyListener {
 	// ===============================================
 
 	public static void main(String args[]) {
-		EventQueue.invokeLater(new Runnable() { // uses the Event dispatch thread from Java 5 (refactored)
+		makeClips();
+        EventQueue.invokeLater(new Runnable() { // uses the Event dispatch thread from Java 5 (refactored)
 					public void run() {
 						try {
 							Game game = new Game(); // construct itself
 							game.fireUpAnimThread();
+
 
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -229,7 +237,7 @@ public class Game implements Runnable, KeyListener {
 	
 				    CommandCenter.setNumFalcons(CommandCenter.getNumFalcons()+1);
 					tupMarkForRemovals.add(new Tuple(CommandCenter.movFloaters, movFloater));
-					Sound.playSound("Our Romatic.mp3");
+					Sound.playSound("shipspawn.wav");
 	
 				}//end if 
 			}//end inner for
@@ -261,6 +269,23 @@ public class Game implements Runnable, KeyListener {
 
     }
 
+    public static void makeClips(){
+        clipArray.add(Sound.clipForLoopFactory("Shorts/BonJovi_Always.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/BTyler_TotalEclipse.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/CCrew_DiedInYourArms.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/Houston_IWillAlwaysLove.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/Killers_Brightside.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/Poison_EveryRose.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/Seger_Tonight.wav"));
+        clipArray.add(Sound.clipForLoopFactory("Shorts/Springsteen_USA.wav"));
+    }
+
+    public Clip randomClip(){
+        int choice = Game.R.nextInt(clipArray.size());
+        System.out.println("Music Choice is: " + choice);
+        return clipArray.get(choice);
+    }
+
 	private void killFoe(Movable movFoe) {
 
         if (movFoe instanceof Asteroid){
@@ -270,23 +295,35 @@ public class Game implements Runnable, KeyListener {
             if (((CommandCenter.getScore()%100) == 0)){
                 System.out.println("Changing level.");
                 CommandCenter.setLevel(CommandCenter.getLevel() + 1 );
+                clpMusicBackground.stop();
+                clpMusicBackground = randomClip();
             }
 
 			//we know this is an Asteroid, so we can cast without threat of ClassCastException
 			Asteroid astExploded = (Asteroid)movFoe;
 			//big asteroid 
 			if(astExploded.getSize() == 0){
-				//spawn two medium Asteroids
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				
+				int choice = Game.R.nextInt(3);
+				//spawn two, one or zero medium Asteroids
+				if (choice == 2){
+                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+	    			tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                }
+                else if (choice ==1){
+                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                }
 			} 
 			//medium size aseroid exploded
 			else if(astExploded.getSize() == 1){
-				//spawn two small Asteroids
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
-				//tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                int choice = Game.R.nextInt(3);
+                //spawn two small Asteroids
+                if (choice == 2){
+                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                }
+                else if (choice ==1){
+                    tupMarkForAdds.add(new Tuple(CommandCenter.movFoes,new Asteroid(astExploded)));
+                }
 			}
 			//remove the original Foe	
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
@@ -306,14 +343,7 @@ public class Game implements Runnable, KeyListener {
             }
 			tupMarkForRemovals.add(new Tuple(CommandCenter.movFoes, movFoe));
 		}
-		
-		
-		
 
-		
-		
-		
-		
 	}
 
 	//some methods for timing events in the game,
@@ -341,7 +371,7 @@ public class Game implements Runnable, KeyListener {
     private void spawnNewDiamond() {
         //Spawn a diamond and add it to the moveFoes array.
         //Need to change this constant.
-        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+        if (nTick % (SPAWN_NEW_DIAMOND - nLevel * 7) == 0) {
             CommandCenter.movFoes.add(new Diamond());
         }
     }
@@ -349,7 +379,7 @@ public class Game implements Runnable, KeyListener {
     private void spawnNewRock() {
         //Spawn a diamond and add it to the moveFoes array.
         //Need to change this constant.
-        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+        if (nTick % (SPAWN_NEW_ROCK - nLevel * 7) == 0) {
             CommandCenter.movFoes.add(new Rock(Game.R.nextInt(1) + 1));
         }
     }
@@ -357,7 +387,7 @@ public class Game implements Runnable, KeyListener {
     private void spawnGold() {
         //Spawn a diamond and add it to the moveFoes array.
         //Need to change this constant.
-        if (nTick % (SPAWN_NEW_SHIP_FLOATER - nLevel * 7) == 0) {
+        if (nTick % (SPAWN_NEW_GOLD - nLevel * 7) == 0) {
             CommandCenter.movFoes.add(new Gold());
         }
     }
@@ -608,15 +638,15 @@ public class Game implements Runnable, KeyListener {
 				break;
 			//Want up and down to not function and left and right to move the falcon by a constant amount right or left.
             //
-            case UP:
+            case DOWN:
 				fal.stopShip();
-                if (!CommandCenter.isPaused())
-					clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                //if (!CommandCenter.isPaused())
+				//	clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
 				break;
 			case LEFT:
                 fal.slideLeft();
-                if (!CommandCenter.isPaused())
-                    clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
+                //if (!CommandCenter.isPaused())
+                //    clpThrust.loop(Clip.LOOP_CONTINUOUSLY);
 
                 //fal.rotateLeft();
 				break;

@@ -15,9 +15,7 @@ public class Falcon extends Sprite {
 	// ==============================================================
 	
 	private final double THRUST = .65;
-
 	final int DEGREE_STEP = 7;
-	
 	private boolean bShield = false;
 	private boolean bFlame = false;
 	private boolean bProtected; //for fade in and out
@@ -133,7 +131,7 @@ public class Falcon extends Sprite {
 
             setCenter(new Point((int) dX, (int) dY));
         }
-        System.out.println(getDeltaX());
+        //System.out.println(getDeltaX());
         /*if (bThrusting) {
 			bFlame = true;
 			double dAdjustX = Math.cos(Math.toRadians(getOrientation()))
